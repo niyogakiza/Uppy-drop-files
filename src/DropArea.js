@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 
 const Uppy = require("uppy/lib/core");
 const DashboardModal = require("uppy/lib/react/DashboardModal");
@@ -10,23 +10,22 @@ const DropArea = props => {
   const handleUploadModalOpen = () => setModalOpen(true);
   const handleUploadModalClose = () => setModalOpen(false);
 
-  // I think this is useless
-  // useEffect(() => {
-  //   return () => uppy.close();
-  // });
+  const uppy = useMemo(() => {
+    const uppy = Uppy({
+      meta: { type: "avatar" },
+      autoProceed: true
+    });
 
-  const uppy = Uppy({
-    meta: { type: "avatar" },
-    autoProceed: true
-  });
+    uppy.use(Tus, { endpoint: 'https"//master.tus.io/files/' });
+    uppy.on("complete", result => {
+      const name = result.successful[0].name;
+      const url = result.successful[0].uploadURL;
+      props.handleUploadCompleted(name, url);
+    });
+    uppy.run();
 
-  uppy.use(Tus, { endpoint: 'https"//master.tus.io/files/' });
-  uppy.on("complete", result => {
-    const name = result.successful[0].name;
-    const url = result.successful[0].uploadURL;
-    props.handleUploadCompleted(name, url);
-  });
-  uppy.run();
+    return uppy;
+  }, []);
 
   return (
     <div>
