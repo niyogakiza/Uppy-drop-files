@@ -1,17 +1,12 @@
 import React, { useState, Fragment } from "react";
 import DropArea from "./DropArea";
 
-const initialState = [
-  { id: "1", url: "1.jpg" },
-  { id: "2", url: "2.jpg" },
-  { id: "3", url: "3.jpg" }
-];
 const ImageList = () => {
-  const [images, setImages] = useState(initialState);
+  const [images, setImages] = useState([]);
 
-  const handleUploadCompleted = (id, url) => {
+  const handleUploadCompleted = (name, url) => {
     let allImages = images;
-    allImages.push({ id, url });
+    allImages.push({ name, url });
     setImages(allImages);
   };
 
@@ -23,9 +18,9 @@ const ImageList = () => {
       <table>
         <tbody>
           {images.map(image => (
-            <tr key={image.id}>
+            <tr key={image.name}>
               <td>
-                {image.id} - {image.url}
+                {image.name} - {image.url}
               </td>
             </tr>
           ))}

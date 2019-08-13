@@ -10,9 +10,10 @@ const DropArea = props => {
   const handleUploadModalOpen = () => setModalOpen(true);
   const handleUploadModalClose = () => setModalOpen(false);
 
-  useEffect(() => {
-    return Uppy.close();
-  }, []);
+  // I think this is useless
+  // useEffect(() => {
+  //   return () => uppy.close();
+  // });
 
   const uppy = Uppy({
     meta: { type: "avatar" },
@@ -21,9 +22,9 @@ const DropArea = props => {
 
   uppy.use(Tus, { endpoint: 'https"//master.tus.io/files/' });
   uppy.on("complete", result => {
-    const id = result.successful[0].id;
+    const name = result.successful[0].name;
     const url = result.successful[0].uploadURL;
-    props.handleUploadCompleted(id, url);
+    props.handleUploadCompleted(name, url);
   });
   uppy.run();
 
